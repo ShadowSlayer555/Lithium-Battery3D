@@ -1,0 +1,6 @@
+{
+  "name": "Lithium-Ion Battery Exploded View",
+  "description": "An interactive 3D exploded view of a Lithium-Ion battery's cross-section, displaying the elemental makeup of each layer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
