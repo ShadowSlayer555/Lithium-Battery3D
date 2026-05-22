@@ -90,6 +90,7 @@ export default function App() {
   const [viewState, setViewState] = useState<ViewState>('assembled');
   const [hoveredLayer, setHoveredLayer] = useState<string | null>(null);
   const [selectedLayer, setSelectedLayer] = useState<LayerInfo | null>(null);
+  const [canContinue, setCanContinue] = useState(false);
 
   const cardVariants = {
     assembled: ({ i }: { i: number }) => {
@@ -186,19 +187,29 @@ export default function App() {
             
             <AnimatePresence mode="popLayout">
                {viewState !== 'detailed' && (
-                 <motion.button
+                 <motion.a
                    initial={{ opacity: 0, scale: 0.9 }}
                    animate={{ opacity: 1, scale: 1 }}
                    exit={{ opacity: 0, scale: 0.9 }}
-                   onClick={() => setViewState(s => s === 'assembled' ? 'exploded' : 'assembled')}
-                   className="hidden md:flex items-center gap-3 px-8 py-4 bg-[#00FF66] text-[#0A0A0B] font-bold text-xs uppercase tracking-widest rounded-full hover:scale-105 transition-transform"
+                   href={viewState === 'exploded' && canContinue ? 'https://shadowslayer555.my.canva.site/elements-of-a-phone-03' : undefined}
+                   onClick={(e) => {
+                     if (viewState === 'assembled') {
+                       e.preventDefault();
+                       setViewState('exploded');
+                       setCanContinue(false);
+                       setTimeout(() => setCanContinue(true), 1000);
+                     } else if (!canContinue) {
+                       e.preventDefault();
+                     }
+                   }}
+                   className={`hidden md:flex items-center gap-3 px-8 py-4 bg-[#00FF66] text-[#0A0A0B] font-bold text-xs uppercase tracking-widest rounded-full transition-transform ${viewState === 'exploded' && !canContinue ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
                  >
                    {viewState === 'assembled' ? (
                      <>EXPLODE MODULE →</>
                    ) : (
-                     <>REASSEMBLE ←</>
+                     <>CONTINUE →</>
                    )}
-                 </motion.button>
+                 </motion.a>
                )}
             </AnimatePresence>
           </div>
@@ -319,16 +330,26 @@ export default function App() {
       <AnimatePresence>
         {viewState !== 'detailed' && (
           <motion.div className="fixed bottom-8 inset-x-8 z-50 md:hidden flex justify-center pointer-events-auto">
-             <button
-               onClick={() => setViewState(s => s === 'assembled' ? 'exploded' : 'assembled')}
-               className="w-full max-w-sm flex items-center justify-center gap-3 px-8 py-4 bg-[#00FF66] text-[#0A0A0B] font-bold text-xs uppercase tracking-widest rounded-full shadow-xl active:scale-95 transition-transform"
+             <a
+               href={viewState === 'exploded' && canContinue ? 'https://shadowslayer555.my.canva.site/elements-of-a-phone-03' : undefined}
+               onClick={(e) => {
+                 if (viewState === 'assembled') {
+                   e.preventDefault();
+                   setViewState('exploded');
+                   setCanContinue(false);
+                   setTimeout(() => setCanContinue(true), 1000);
+                 } else if (!canContinue) {
+                   e.preventDefault();
+                 }
+               }}
+               className={`w-full max-w-sm flex items-center justify-center gap-3 px-8 py-4 bg-[#00FF66] text-[#0A0A0B] font-bold text-xs uppercase tracking-widest rounded-full shadow-xl transition-transform ${viewState === 'exploded' && !canContinue ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
              >
                {viewState === 'assembled' ? (
                  <>EXPLODE MODULE →</>
                ) : (
-                 <>REASSEMBLE ←</>
+                 <>CONTINUE →</>
                )}
-             </button>
+             </a>
           </motion.div>
         )}
       </AnimatePresence>
